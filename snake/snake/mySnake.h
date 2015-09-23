@@ -19,10 +19,15 @@ public:
     enum Status{NOTHING, GET_POINT, DIE};
     
     mySnake(unsigned int seed=0, int numOfGo=1){
+        init(seed, numOfGo);
+    };
+    void init(unsigned int seed, int numOfGo){
         point = 0;
         bonus = 10;
         mySeed = seed;
         srand(mySeed);
+        snake.clear();
+        goodies.clear();
         snake.push_back(std::pair<int,int>(1,2));
         snake.push_back(std::pair<int,int>(2,2));
         numOfGoodies = numOfGo;
@@ -61,14 +66,16 @@ private:
  If snake hit the wall or itself, it dies*/
 int mySnake::nextStep()
 {
+    if(status==DIE) return DIE;
+    
     int snakeX = snake[snake.size()-1].first;
     int snakeY = snake[snake.size()-1].second;
     
     //snake moves out of bound
     if ((direction==UP && snakeY==7)
-     || (direction==RIGHT && snakeX==7)
-     || (direction==DOWN && snakeY==0)
-     || (direction==LEFT && snakeX==0)) {
+        || (direction==RIGHT && snakeX==7)
+        || (direction==DOWN && snakeY==0)
+        || (direction==LEFT && snakeX==0)) {
         status = DIE;
         return status;
     }
@@ -77,9 +84,9 @@ int mySnake::nextStep()
         int gx = goodies[i].first;
         int gy = goodies[i].second;
         if ((direction == UP && snakeX==gx && snakeY==gy-1)
-         || (direction == RIGHT && snakeX==gx-1 && snakeY==gy)
-         || (direction == DOWN && snakeX==gx && snakeY==gy+1)
-         || (direction == LEFT && snakeX==gx+1 && snakeY == gy)) {
+            || (direction == RIGHT && snakeX==gx-1 && snakeY==gy)
+            || (direction == DOWN && snakeX==gx && snakeY==gy+1)
+            || (direction == LEFT && snakeX==gx+1 && snakeY == gy)) {
             point += bonus;
             status = GET_POINT;
             snake.push_back(std::pair<int, int>(gx, gy));
@@ -94,7 +101,7 @@ int mySnake::nextStep()
     //snakes bites itself
     for (int i=0; i<snake.size()-1; i++) {
         if (snake[snake.size()-1].first == snake[i].first
-         && snake[snake.size()-1].second == snake[i].second) {
+            && snake[snake.size()-1].second == snake[i].second) {
             status = DIE;
             return status;
         }
@@ -131,7 +138,7 @@ void mySnake::initializeGoodies()
     if (goodies.size()+snake.size() == 64) {
         return;
     }
-    //already has enough goodies, no need to initialize
+    //add goodies until num of goodies reach specified limit
     while (goodies.size() <numOfGoodies) {
         addGoodie();
     }
@@ -147,13 +154,13 @@ void mySnake::addGoodie()
         flag = true;
         for (int i=0; i<snake.size(); i++) {
             if (snake[i].first==x
-             && snake[i].second==y) {
+                && snake[i].second==y) {
                 flag = false;
             }
         }
         for (int i=0; i<goodies.size(); i++) {
             if (goodies[i].first==x
-             && goodies[i].second==y) {
+                && goodies[i].second==y) {
                 flag = false;
             }
         }

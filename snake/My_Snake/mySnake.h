@@ -19,17 +19,22 @@ public:
     enum Status{NOTHING, GET_POINT, DIE};
     
     mySnake(unsigned int seed=0, int numOfGo=1){
+        init(seed, numOfGo);
+    };
+    void init(unsigned int seed, int numOfGo){
         point = 0;
         bonus = 10;
         mySeed = seed;
         srand(mySeed);
+        snake.clear();
+        goodies.clear();
         snake.push_back(std::pair<int,int>(1,2));
         snake.push_back(std::pair<int,int>(2,2));
         numOfGoodies = numOfGo;
         initializeGoodies();
         status = mySnake::NOTHING;
         direction = RIGHT;
-    };
+      };
     int nextStep();
     
     void setNumOfGoodies(int num){numOfGoodies = num;};
@@ -61,6 +66,8 @@ private:
  If snake hit the wall or itself, it dies*/
 int mySnake::nextStep()
 {
+    if(status==DIE) return DIE;  
+  
     int snakeX = snake[snake.size()-1].first;
     int snakeY = snake[snake.size()-1].second;
     
