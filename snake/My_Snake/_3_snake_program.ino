@@ -12,6 +12,7 @@ void setup() {
   
   matrix.begin(0x70);  // pass in the address
   matrix.setRotation(3);
+  matrix.setBrightness(3);
 }
 void loop(){
   checkCommunication();
